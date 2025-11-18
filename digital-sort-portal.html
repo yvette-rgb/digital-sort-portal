@@ -42,8 +42,8 @@
                 <!-- Left Side: Logo and Title Group -->
                 <div class="flex items-center space-x-4">
                     
-                    <!-- LOGO (Size set to h-32) -->
-                    <img src="https://res.cloudinary.com/dyemjxidz/image/upload/v1756495275/Official_Logos_33_q2ajhh.png" 
+                    <!-- LOGO (Size set to h-32) - UPDATED TO NEW LOGO URL -->
+                    <img src="https://res.cloudinary.com/dyemjxidz/image/upload/v1763448526/NeatFreeks_j5cqve.png" 
                          alt="Business Logo" class="h-32 w-auto object-contain">
 
                     <div>
@@ -54,6 +54,7 @@
                 </div>
 
                 <!-- Right Side: New Branding Image (Size increased to h-48 for prominence) -->
+                <!-- Corrected Cloudinary URL -->
                 <img src="https://res.cloudinary.com/dyemjxidz/image/upload/v1763437316/We_Freak_Neat._szxmmf.png" 
                      alt="Branding Image" 
                      class="h-48 w-auto object-contain flex-shrink-0">
@@ -242,11 +243,13 @@
                 statusMessage.className = 'mt-4 text-sm text-center font-medium h-5';
             }, 5000);
         }
-
-        // --- 4. SERVICE WORKER REGISTRATION ---
+        
+        // --- 4. SERVICE WORKER REGISTRATION (PWA) ---
+        // Register the Service Worker for offline access and installability
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
+                // IMPORTANT: The path is relative to the root of the site (/)
+                navigator.serviceWorker.register('/service-worker.js')
                     .then(registration => {
                         console.log('ServiceWorker registration successful with scope: ', registration.scope);
                     })
@@ -255,6 +258,7 @@
                     });
             });
         }
+
 
         // --- 5. FORM SUBMISSION ---
 
@@ -313,7 +317,7 @@
             }
         }
         
-        // --- 6. INITIALIZATION ---
+        // --- 5. INITIALIZATION ---
         window.onload = function() {
             // Attach listeners for dynamic tag calculation
             sourceTypeInput.addEventListener('input', updateIntakeTag);
