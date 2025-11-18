@@ -5,8 +5,10 @@ const urlsToCache = [
   './manifest.json',
   'https://cdn.tailwindcss.com', // Caches the CSS framework
   // Caches all external images for offline use
-  'https://res.cloudinary.com/dyemjxidz/image/upload/v1756495275/Official_Logos_33_q2ajhh.png',
-  'https://res.cloudinary.com/dyemjxidz/image/upload/v1763437316/We_Freak_Neat._szxmmf.png'
+  'https://res.cloudinary.com/dyemjxidz/image/upload/v1763448526/NeatFreeks_j5cqve.png', // New Logo
+  'https://res.cloudinary.com/dyemjxidz/image/upload/v1763437316/We_Freak_Neat._szxmmf.png', // Branding Image
+  '/icon-192.png',
+  '/icon-512.png'
 ];
 
 // Installation: Caches all essential assets for offline viewing
@@ -26,7 +28,7 @@ self.addEventListener('install', event => {
 self.addEventListener('fetch', event => {
   // We only cache GET requests for assets, not POST requests for data submission
   if (event.request.method === 'GET') {
-    event.respondWith(
+    event.respondWith( // <--- CORRECTED: 'respondWith' with capital 'W'
       fetch(event.request).catch(function() {
         return caches.match(event.request);
       })
