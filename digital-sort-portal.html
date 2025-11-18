@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intake - Digital Sort</title>
+    
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Updated to Orange and Black theme
+                        'primary': '#FF9800', // Deep Orange for highlights and buttons
+                        'secondary': '#1F2937', // Dark Gray/Black for text and strong elements
+                        'bg-light': '#F8F8F8',
+                        'card-bg': '#FFFFFF',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-bg-light min-h-screen p-4 sm:p-8 font-sans">
+
+    <div id="app-container" class="max-w-4xl mx-auto">
+        <!-- Header updated for larger logo and new right-side image -->
+        <header class="mb-10 p-6 bg-card-bg rounded-xl shadow-lg">
+            
+            <!-- Main header bar: Logo/Title Group (Left) vs. New Image (Right) -->
+            <div class="flex justify-between items-center space-x-4 mb-4 border-b pb-4">
+                
+                <!-- Left Side: Logo and Title Group -->
+                <div class="flex items-center space-x-4">
+                    
+                    <!-- LOGO (Size set to h-32) -->
+                    <img src="https://res.cloudinary.com/dyemjxidz/image/upload/v1756495275/Official_Logos_33_q2ajhh.png" 
+                         alt="Business Logo" class="h-32 w-auto object-contain">
+
+                    <div>
+                        <!-- Title -->
+                        <h1 class="text-4xl font-extrabold text-secondary mb-1">Intake - Digital Sort</h1>
+                        <p class="text-gray-600 text-base">Digital log for item breakdown and sorting process (Post-Intake).</p>
+                    </div>
+                </div>
+
+                <!-- Right Side: New Branding Image (Size increased to h-48 for prominence) -->
+                <img src="https://res.cloudinary.com/dyemjxidz/image/upload/v1763437316/We_Freak_Neat._szxmmf.png" 
+                     alt="Branding Image" 
+                     class="h-48 w-auto object-contain flex-shrink-0">
+
+            </div>
+            
+            <!-- CLIENT ID INPUT SECTION -->
+            <div class="mt-4 flex flex-col sm:flex-row items-center justify-start space-y-2 sm:space-y-0 sm:space-x-4">
+                 <div class="flex items-center w-full sm:w-1/3">
+                    <label for="clientIdInput" class="text-sm font-semibold text-gray-700 mr-2">Client ID:</label>
+                    <input type="text" id="clientIdInput" name="entry.2000000001" placeholder="Client_Smith_01" required
+                           class="w-full p-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150 text-sm">
+                </div>
+                
+                <!-- Updated static Status text to be more descriptive -->
+                <p class="text-sm text-gray-500 p-2 bg-gray-100 rounded-lg w-full sm:w-auto">
+                    <span class="font-semibold">Status:</span> Ready to log and submit data.
+                </p>
+            </div>
+            <!-- END CLIENT ID SECTION -->
+        </header>
+
+        <!-- MAIN FORM - NOW FULL WIDTH -->
+        <main class="grid grid-cols-1 gap-8">
+            
+            <!-- Log Entry Form (Now full width) -->
+            <div class="bg-card-bg p-6 rounded-xl shadow-xl h-fit">
+                <h2 class="text-2xl font-bold text-secondary mb-6 border-b pb-2">New Item Entry</h2>
+                
+                <!-- NOTE: Action and Method are set dynamically by JavaScript -->
+                <form id="log-form"> 
+                    
+                    <!-- AREA TYPE (B) -->
+                    <div class="mb-4">
+                        <label for="areaType" class="block text-sm font-medium text-gray-700 mb-1">Area Type (Primary Location)</label>
+                        <select id="areaType" name="entry.2000000002" required
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                            <option value="">-- Select Area --</option>
+                            <option value="Kitchen">Kitchen</option>
+                            <option value="Master Closet">Master Closet</option>
+                            <option value="Home Office">Home Office</option>
+                            <option value="Garage">Garage</option>
+                            <option value="Pantry">Pantry</option>
+                            <option value="Living Room / Common">Living Room / Common Area</option>
+                            <option value="Bedroom / Secondary Closet">Bedroom / Secondary Closet</option>
+                            <option value="Bathroom / Linen">Bathroom / Linen</option>
+                            <option value="Storage / Utility Room">Storage / Utility Room</option>
+                            <option value="Other">Other / Unspecified</option>
+                        </select>
+                    </div>
+
+                    <!-- Source Type (C) & Source Number (D) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="sourceType" class="block text-sm font-medium text-gray-700 mb-1">Source Type</label>
+                            <input type="text" id="sourceType" name="entry.2000000003" placeholder="e.g., TOTES, MISCBOX" required 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150 uppercase">
+                        </div>
+                        <div>
+                            <label for="sourceNumber" class="block text-sm font-medium text-gray-700 mb-1">Source Number</label>
+                            <input type="number" id="sourceNumber" name="entry.2000000004" min="1" step="1" placeholder="1" required 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                        </div>
+                    </div>
+
+                    <!-- CALCULATED Intake Tag ID (E) - Submitted as a hidden field -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Intake Tag ID (Generated)</label>
+                        <div id="intakeTagDisplay" class="w-full p-3 bg-gray-100 text-secondary font-mono rounded-lg border border-gray-300 font-semibold text-center">
+                            RCV-INT-[TYPE]-[#]
+                        </div>
+                        <!-- Hidden field to submit the calculated value -->
+                        <input type="hidden" id="intakeTagIdHidden" name="entry.2000000005" value="RCV-INT-[]-[]">
+                    </div>
+
+                    <!-- Item Name (G) & Brand (H) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="itemName" class="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+                            <input type="text" id="itemName" name="entry.2000000007" placeholder="Concise title (e.g., Photo Album)" required 
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                        </div>
+                        <div>
+                            <label for="itemBrand" class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+                            <input type="text" id="itemBrand" name="entry.2000000008" placeholder="e.g., Apple, IKEA, Pioneer" 
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                        </div>
+                    </div>
+                    
+                    <!-- Description / Content (I) -->
+                    <div class="mb-4">
+                        <label for="itemDescription" class="block text-sm font-medium text-gray-700 mb-1">Description / Content</label>
+                        <textarea id="itemDescription" name="entry.2000000009" rows="3" placeholder="Detailed description of the item." required 
+                                  class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150"></textarea>
+                    </div>
+
+                    <!-- Page # (F) and Quantity (J) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="pageNumber" class="block text-sm font-medium text-gray-700 mb-1">Page \# (pg)</label>
+                            <input type="number" id="pageNumber" name="entry.2000000006" min="1" step="1" placeholder="5" 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                        </div>
+                        <div>
+                            <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity (Est.)</label>
+                            <input type="number" id="quantity" name="entry.2000000010" min="1" step="1" value="1" required 
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                        </div>
+                    </div>
+                    
+                    <!-- Use Case (K) & Recommended Zone (L) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label for="useCase" class="block text-sm font-medium text-gray-700 mb-1">Use Case</label>
+                            <input type="text" id="useCase" name="entry.2000000011" placeholder="Use Case (e.g., Reference, Archive, Donate)" 
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                        </div>
+                        <div>
+                            <label for="recommendedZone" class="block text-sm font-medium text-gray-700 mb-1">Recommended Zone (Sort Target)</label>
+                            <input type="text" id="recommendedZone" name="entry.2000000012" placeholder="Suggested zone (e.g., New Home Office shelf 3)" 
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                        </div>
+                    </div>
+                    
+                    <!-- Drive Folder (M) -->
+                    <div class="mb-6">
+                        <label for="driveFolder" class="block text-sm font-medium text-gray-700 mb-1">Drive Folder</label>
+                        <input type="text" id="driveFolder" name="entry.2000000013" placeholder="Drive folder (e.g., Client_Smith/Photos_Archive)" 
+                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary transition duration-150">
+                    </div>
+
+                    <button type="submit" id="save-button"
+                            class="w-full py-3 px-4 bg-primary text-secondary font-semibold rounded-lg shadow-md hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-[1.01]">
+                        Sync Item to Google Sheet
+                    </button>
+                    
+                    <p id="status-message" class="mt-4 text-sm text-center font-medium h-5"></p>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Application Logic (Web App Sync) -->
+    <script>
+        // --- 1. CONFIGURATION ---
+        // !!! DEPLOYED GOOGLE APPS SCRIPTeB APP URL !!!
+        const GOOGLE_FORM_URL = "https://script.google.com/a/macros/neatfreeks.team/s/AKfycbwWMXlZ8fNEb-_VboTIK7_RjPabmrTKqcchqSr9SADAhqzu01ypqxW0-zeJcEAXF8t2/exec"; 
+        
+        // --- 2. ELEMENTS ---
+        const logForm = document.getElementById('log-form');
+        const statusMessage = document.getElementById('status-message');
+        const sourceTypeInput = document.getElementById('sourceType');
+        const sourceNumberInput = document.getElementById('sourceNumber');
+        const intakeTagDisplay = document.getElementById('intakeTagDisplay');
+        const intakeTagIdHidden = document.getElementById('intakeTagIdHidden');
+        const saveButton = document.getElementById('save-button');
+
+        // --- 3. HELPER FUNCTIONS ---
+        
+        /**
+         * Calculates and updates the Intake Tag ID display and hidden field.
+         */
+        function updateIntakeTag() {
+            const sourceType = sourceTypeInput.value.trim().toUpperCase() || '[TYPE]';
+            let sourceNumber = sourceNumberInput.value.trim();
+            
+            // Pad source number to at least 2 digits for consistent tag format (e.g., 1 -> 01)
+            sourceNumber = sourceNumber ? sourceNumber.padStart(2, '0') : '[#]';
+
+            const tag = `RCV-INT-${sourceType}-${sourceNumber}`;
+            intakeTagDisplay.textContent = tag;
+            intakeTagIdHidden.value = tag; // Update the value that gets submitted
+        }
+        
+        /**
+         * Displays a temporary status message to the user.
+         */
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `mt-4 text-sm text-center font-medium h-5 ${
+                type === 'success' ? 'text-primary' : 'text-red-500'
+            }`;
+            setTimeout(() => {
+                statusMessage.textContent = '';
+                statusMessage.className = 'mt-4 text-sm text-center font-medium h-5';
+            }, 5000);
+        }
+
+        // --- 4. FORM SUBMISSION ---
+
+        /**
+         * Handles the form submission to send data directly to the Google Sheet Web App Endpoint.
+         */
+        async function submitToGoogleSheet(e) {
+            e.preventDefault();
+            
+            // 1. Validation and Tag Update
+            if (!GOOGLE_FORM_URL || GOOGLE_FORM_URL.includes("PLACEHOLDER")) {
+                 showStatus("Error: Google Sheet URL is not configured!", 'error');
+                 return;
+            }
+            updateIntakeTag(); // Ensure the final tag is calculated
+            
+            // 2. Prepare Form Data (using built-in FormData for simplicity)
+            const formData = new FormData(logForm);
+            
+            // 3. Construct URLSearchParams from FormData
+            const urlEncodedData = new URLSearchParams();
+            for (const pair of formData) {
+                // The GS script expects URL-encoded key-value pairs
+                urlEncodedData.append(pair[0], pair[1]);
+            }
+            
+            saveButton.textContent = "Syncing...";
+            saveButton.disabled = true;
+
+            try {
+                // 4. Perform the cross-origin POST request (Fetch API)
+                // mode: 'no-cors' is necessary for Google Web App cross-origin requests
+                const response = await fetch(GOOGLE_FORM_URL, {
+                    method: 'POST',
+                    body: urlEncodedData,
+                    mode: 'no-cors' 
+                });
+                
+                showStatus("✅ Item synced successfully to Google Sheet!", 'success');
+                
+                // Keep Client ID and Area Type for the next entry
+                const currentClientId = document.getElementById('clientIdInput').value;
+                const currentAreaType = document.getElementById('areaType').value;
+
+                logForm.reset();
+                document.getElementById('clientIdInput').value = currentClientId;
+                document.getElementById('areaType').value = currentAreaType;
+                updateIntakeTag(); // Recalculate tag display
+
+            } catch (error) {
+                console.error("Error submitting to Google Sheet Web App: ", error);
+                showStatus(`Error during sync: ${error.message}. Check your Web App URL.`, 'error');
+            } finally {
+                saveButton.textContent = "Sync Item to Google Sheet";
+                saveButton.disabled = false;
+            }
+        }
+        
+        // --- 5. INITIALIZATION ---
+        window.onload = function() {
+            // Attach listeners for dynamic tag calculation
+            sourceTypeInput.addEventListener('input', updateIntakeTag);
+            sourceNumberInput.addEventListener('input', updateIntakeTag);
+            logForm.addEventListener('submit', submitToGoogleSheet);
+            updateIntakeTag(); // Initial call to set the placeholder display
+        };
+        
+    </script>
+</body>
+</html>
