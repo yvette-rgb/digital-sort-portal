@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intake - Digital Sort</title>
     
+    <!-- PWA Requirements -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#FF9800">
+    
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -239,7 +243,20 @@
             }, 5000);
         }
 
-        // --- 4. FORM SUBMISSION ---
+        // --- 4. SERVICE WORKER REGISTRATION ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+
+        // --- 5. FORM SUBMISSION ---
 
         /**
          * Handles the form submission to send data directly to the Google Sheet Web App Endpoint.
@@ -296,7 +313,7 @@
             }
         }
         
-        // --- 5. INITIALIZATION ---
+        // --- 6. INITIALIZATION ---
         window.onload = function() {
             // Attach listeners for dynamic tag calculation
             sourceTypeInput.addEventListener('input', updateIntakeTag);
